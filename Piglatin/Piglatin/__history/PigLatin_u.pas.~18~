@@ -1,0 +1,77 @@
+unit PigLatin_u;
+
+interface
+
+uses
+  Winapi.Windows,
+  Winapi.Messages,
+  System.SysUtils,
+  System.Variants,
+  System.Classes,
+  Vcl.Graphics,
+  Vcl.Controls,
+  Vcl.Forms,
+  Vcl.Dialogs,
+  Vcl.StdCtrls,
+  System.Character;
+
+type
+  TForm1 = class(TForm)
+    btnTranslate: TButton;
+    btnClear: TButton;
+    btnExit: TButton;
+    memInput: TMemo;
+    memOutput: TMemo;
+    lblEnterEnglishTextHere: TLabel;
+    lblPigLatinTranslation: TLabel;
+    procedure btnClearClick(Sender: TObject);
+    procedure btnExitClick(Sender: TObject);
+  private
+      { Private declarations }
+    function TranslateToPigLatin(const Text: string): String; // Main Function
+    function IsVowel(C: Char): Boolean; // Helper Function.
+  public
+      { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+{$R *.dfm}
+
+  // Clear Button. Clears The two memos and sets focus to Input Memo.
+procedure TForm1.btnClearClick(Sender: TObject);
+begin
+  memInput.Clear;
+  memOutput.Clear;
+  memInput.SetFocus;
+end;
+
+  // Exit Button. confirm Exit.
+procedure TForm1.btnExitClick(Sender: TObject);
+begin
+    // Shows a Conformation message box
+  if MessageDlg('Are you Sure You Want To Close', TMsgDlgType.mtConfirmation,
+    [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], 0) = mrYes then
+    begin
+        // If user clicks Yes, Close the Form
+      Close;
+    end;
+    // If user clicks No, Nothing Happens
+
+end;
+
+  // Helper Function
+function TForm1.IsVowel(C: Char): Boolean;
+begin
+  Result := C.ToLower in ['a', 'e', 'i', 'o', 'u']; // checks if char in lower Case is a Vowel
+end;
+
+function TForm1.TranslateToPigLatin(const Text: string): String;
+begin
+
+end;
+
+end.

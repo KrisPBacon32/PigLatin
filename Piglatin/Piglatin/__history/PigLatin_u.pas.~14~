@@ -1,0 +1,234 @@
+unit PigLatin_u;
+
+interface
+
+uses
+  Winapi.Windows,
+  Winapi.Messages,
+  System.SysUtils,
+  System.Variants,
+  System.Classes,
+  Vcl.Graphics,
+  Vcl.Controls,
+  Vcl.Forms,
+  Vcl.Dialogs,
+  Vcl.StdCtrls;
+
+type
+  TForm1 = class(TForm)
+    btnTranslate: TButton;
+    btnClear: TButton;
+    btnExit: TButton;
+    memEnglishtext: TMemo;
+    memPigLatin: TMemo;
+    lblEnterEnglishTextHere: TLabel;
+    lblPigLatinTranslation: TLabel;
+    procedure btnClearClick(Sender: TObject);
+    procedure btnExitClick(Sender: TObject);
+    procedure btnTranslateClick(Sender: TObject);
+  private
+    function StartsWithVowel(const word: string): Boolean;
+    function MoveConstanatsToEnd(const word: string): string;
+    function HasSymbolOrNumber(const word: string): Boolean;
+      { Private declarations }
+  public
+      { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+{$R *.dfm}
+
+
+procedure TForm1.btnClearClick(Sender: TObject);
+begin
+  memEnglishtext.Clear;
+  memPigLatin.Clear;
+  memEnglishtext.SetFocus;
+end;
+
+procedure TForm1.btnExitClick(Sender: TObject);
+begin
+    // Shows a Conformation message box
+  if MessageDlg('Are you Sure You Want To Close',
+    TMsgDlgType.mtConfirmation,
+    [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], 0) = mrYes then
+  begin
+      // If user clicks Yes, Close the Form
+    Close;
+  end;
+    // If user clicks No, Nothing Happens
+
+end;
+
+  { Specifications
+    • If a word starts with a vowel, just add way to the end of the word.
+
+    • If a word starts with a consonant, move the consonants before the
+    first vowel to the end of the word and add ay.
+
+    • If a word starts with the letter Y, the Y should be treated as a
+    consonant. If the Y appears anywhere else in the word, it should
+    be treated as a vowel.
+
+    • Keep the case of the original word whether it’s uppercase (TEST),
+    title case (Test), or lowercase (test).
+
+    • Keep all punctuation at the end of the translated word.
+
+    • Translate words with contractions. For example, can’t should be an’tcay.
+
+    • Don’t translate words that contain numbers or symbols. For example,
+    123 should be left as 123, and bill@microsoft.com should be left as bill@microsoft.com.
+
+    • Check that the user has entered text before performing the translation. }
+
+procedure TForm1.btnTranslateClick(Sender: TObject);
+var
+  sEnglishText, sPigLatin, sWord, sTemp: string;
+  iPos: integer;
+  bVowel, bHasNumSym: Boolean;
+
+begin
+
+    // initualizing variables.
+  sEnglishText := '';
+  sPigLatin := '';
+  sWord := '';
+  sTemp := '';
+  bVowel := false;
+  bHasNumSym := false;
+
+    // get user input
+  sEnglishText := memEnglishtext.Text; // This is a String
+
+  while sEnglishText <> '' do // Loop until sEnglishText is Empty
+  begin
+      // Find the position of the first space in the remaining string
+    iPos := Pos(' ', sEnglishText);
+
+    if iPos > 0 then
+    begin
+        // if we found a space
+        // copy characters from first letter to iPos-1
+      sWord := Copy(sEnglishText, 1, iPos - 1); // copying the first word
+
+        // removing the word plus the string from the string
+      Delete(sEnglishText, 1, iPos);
+
+    end
+    else
+    begin
+        // If no space is found the remainder is the last word.
+      sWord := sEnglishText;
+      sEnglishText := '';
+    end; // end of IF
+
+      // check to see is sWord has Symbols or Numbers
+    bHasNumSym := HasSymbolOrNumber(sWord);
+
+    if bHasNumSym then
+    begin
+      sTemp := sWord;
+    end;
+
+    // Separate punctuation from the end of the word
+
+
+
+
+      // BUILD NEW STRING
+    sPigLatin := sPigLatin + sTemp + ' ';
+
+  end; // end of WHILE
+
+  memPigLatin.Lines.Add(sPigLatin);
+
+end;
+
+function TForm1.HasSymbolOrNumber(const word: string): Boolean;
+var
+  bHasNumber, bHasSymbol: Boolean;
+  I: integer;
+  c: Char;
+begin
+  Result := false;
+
+  bHasNumber := false;
+  bHasSymbol := false;
+
+  for I := 1 to length(word) do
+  begin
+    c := word[I];
+    if (c >= '0') and (c <= '9') then
+      bHasNumber := True
+    else if not CharInSet(c, ['a' .. 'z', 'A' .. 'Z', '''', '.', ',', '!', '?', ':', ';']) then
+      bHasSymbol := True;
+  end;
+
+  if bHasNumber or bHasSymbol then
+    Result := True;
+
+end;
+
+function TForm1.MoveConstanatsToEnd(const word: string): string;
+var
+  I: integer;
+  VowelPos: integer;
+  WasCapital: Boolean;
+  sLowerWord: string;
+const
+  Vowels = ['a', 'e', 'i', 'o', 'u'];
+begin
+  if word = '' then
+    Exit(word);
+
+    // Check if original word starts with capital
+  WasCapital := (word[1] >= 'A') and (word[1] <= 'Z');
+  sLowerWord := LowerCase(word);
+  VowelPos := 0;
+
+    // Find first vowel position
+  for I := 1 to length(sLowerWord) do
+  begin
+    if sLowerWord[I] in Vowels then
+    begin
+      VowelPos := I;
+      Break;
+    end;
+  end;
+
+    // No vowel found or already starts with vowel
+  if (VowelPos = 0) then
+    Result := word
+  else if (VowelPos = 1) then
+    Result := word + 'way'
+  else
+  begin
+      // Construct new word
+    Result := Copy(word, VowelPos, MaxInt) + Copy(word, 1, VowelPos - 1) + 'ay';
+
+      // Capitalize first letter if original was capitalized
+    if WasCapital then
+      Result := UpCase(Result[1]) + LowerCase(Copy(Result, 2, MaxInt));
+  end;
+end;
+
+function TForm1.StartsWithVowel(const word: string): Boolean;
+begin
+  if length(word) = 0 then
+    Exit(false);
+
+  case UpCase(word[1]) of
+    'A', 'E', 'I', 'O', 'U':
+      Result := True;
+  else
+    Result := false;
+  end;
+
+end;
+
+end.

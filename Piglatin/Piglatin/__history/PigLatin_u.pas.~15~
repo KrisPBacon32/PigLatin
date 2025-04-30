@@ -1,0 +1,64 @@
+unit PigLatin_u;
+
+interface
+
+uses
+  Winapi.Windows,
+  Winapi.Messages,
+  System.SysUtils,
+  System.Variants,
+  System.Classes,
+  Vcl.Graphics,
+  Vcl.Controls,
+  Vcl.Forms,
+  Vcl.Dialogs,
+  Vcl.StdCtrls;
+
+type
+  TForm1 = class(TForm)
+    btnTranslate: TButton;
+    btnClear: TButton;
+    btnExit: TButton;
+    memEnglishtext: TMemo;
+    memPigLatin: TMemo;
+    lblEnterEnglishTextHere: TLabel;
+    lblPigLatinTranslation: TLabel;
+    procedure btnClearClick(Sender: TObject);
+    procedure btnExitClick(Sender: TObject);
+  private
+      { Private declarations }
+  public
+      { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+{$R *.dfm}
+
+
+procedure TForm1.btnClearClick(Sender: TObject);
+begin
+  memEnglishtext.Clear;
+  memPigLatin.Clear;
+  memEnglishtext.SetFocus;
+end;
+
+procedure TForm1.btnExitClick(Sender: TObject);
+begin
+    // Shows a Conformation message box
+  if MessageDlg('Are you Sure You Want To Close',
+    TMsgDlgType.mtConfirmation,
+    [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], 0) = mrYes then
+  begin
+      // If user clicks Yes, Close the Form
+    Close;
+  end;
+    // If user clicks No, Nothing Happens
+
+end;
+
+
+end.

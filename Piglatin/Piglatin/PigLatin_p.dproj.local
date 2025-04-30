@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2025/04/23 12:26:28.000.650,=C:\Users\USER\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2025/04/23 12:34:07.000.298,C:\Users\USER\Desktop\Delphi projects\Piglatin\PigLatin_u.dfm=C:\Users\USER\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2025/04/23 12:34:07.000.298,C:\Users\USER\Desktop\Delphi projects\Piglatin\PigLatin_u.pas=C:\Users\USER\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2025/04/23 12:34:22.000.189,C:\Users\USER\Desktop\Delphi projects\Piglatin\PigLatin_p.dproj=C:\Users\USER\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+  </Transactions>
+</BorlandProject>
